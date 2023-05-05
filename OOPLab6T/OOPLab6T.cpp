@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <string>
 #include <cmath>
 using namespace std;
 
@@ -104,6 +105,56 @@ public:
     }
 };
 
+
+
+class Entity {
+protected:
+    std::string name;
+public:
+    Entity() {}
+    Entity(const std::string& name) : name(name) {}
+    virtual ~Entity() {}
+    virtual void printInfo() const {
+        std::cout << "Name: " << name << std::endl;
+    }
+};
+
+class Student : public Entity {
+protected:
+    int id;
+public:
+    Student() {}
+    Student(const std::string& name, int id) : Entity(name), id(id) {}
+    void printInfo() const override {
+        Entity::printInfo();
+        std::cout << "ID: " << id << std::endl;
+    }
+};
+
+class FamilyMember : public Entity {
+protected:
+    int age;
+public:
+    FamilyMember() {}
+    FamilyMember(const std::string& name, int age) : Entity(name), age(age) {}
+    void printInfo() const override {
+        Entity::printInfo();
+        std::cout << "Age: " << age << std::endl;
+    }
+};
+
+class StudentFamilyMember : public Student, public FamilyMember {
+public:
+    StudentFamilyMember() {}
+    StudentFamilyMember(const std::string& name, int id, int age)
+        : Student(name, id), FamilyMember(name, age) {}
+    void printInfo() const override {
+        Student::printInfo();
+        FamilyMember::printInfo();
+    }
+};
+
+
 int main() {
 
     Animal a(5);
@@ -129,6 +180,21 @@ int main() {
     // Derivation of the areas of each figure
     for (int i = 0; i < 4; i++) {
         cout << "Shape " << i + 1 << " area = " << shapes[i]->area() << endl;
+    }
+
+
+    Entity* entities[3];
+    entities[0] = new Student("John Doe", 12345);
+    entities[1] = new FamilyMember("Jane Doe", 40);
+    entities[2] = new StudentFamilyMember("Alice Doe", 67890, 20);
+
+    for (int i = 0; i < 3; i++) {
+        entities[i]->printInfo();
+        std::cout << std::endl;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        delete entities[i];
     }
 
     return 0;
